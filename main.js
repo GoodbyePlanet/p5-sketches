@@ -3,7 +3,7 @@ import p5 from "p5";
 let points = [];
 let dis;
 
-const sketch0 = new p5((p) => {
+const euclideanDistanceBetweenTwoPoints = new p5((p) => {
   function euclideanDistance(pointOne, pointTwo) {
     let diffX = pointTwo.x - pointOne.x;
     let diffY = pointTwo.y - pointOne.y;
@@ -19,6 +19,7 @@ const sketch0 = new p5((p) => {
 
   p.draw = () => {
     p.background(220);
+    p.text("Click on the canvas to create two points", p.width / 6, 10);
 
     if (points.length > 0) {
       for (var i = 0; i < points.length; i++) {
@@ -31,7 +32,7 @@ const sketch0 = new p5((p) => {
         { x: points[0].x, y: points[0].y },
         { x: points[1].x, y: points[1].y },
       );
-      p.text(`Euclidean Distance between points: ${dis}`, p.width / 10, 10);
+      p.text(`Euclidean Distance between points: ${dis}`, p.width / 10, 30);
     }
   };
 
