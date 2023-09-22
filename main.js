@@ -22,10 +22,6 @@ const nearestNeighbors = new p5((p) => {
         neighbors.push({ x: points[i].x, y: points[i].y, distance: dis });
       }
 
-      console.log(
-        "neighbors sorted",
-        neighbors.map((n) => n.distance).sort((a, b) => a - b),
-      );
       return neighbors.sort((a, b) => a.distance - b.distance);
     }
 
@@ -41,48 +37,47 @@ const nearestNeighbors = new p5((p) => {
         (point) => point.x === neighbor.x && point.y === neighbor.y,
       );
       if (index !== -1) {
-        points[index].color = "blue"; // Add color property to points
+        points[index].color = "#3498db";
       }
     }
-    nearestPointsCalculated = true;
   }
 
   function resetPoints() {
+    neighbors = [];
     points = [];
   }
 
   p.setup = () => {
-    p.createCanvas(400, 400).parent("two");
+    let canvas = p.createCanvas(400, 400).parent("nearestNeighbors");
+    canvas.elt.className = "canvas";
 
-    calculateButton = p.createButton(
-      "Calculate five nearest neighbors of RED point",
-    );
-    calculateButton.mousePressed(paintNearestNeighbors);
+    let buttonsWrapper = p.createDiv();
+    calculateButton = p.createButton("Nearest neighbors of orange point");
     resetButton = p.createButton("Reset");
+
+    buttonsWrapper.elt.appendChild(calculateButton.elt);
+    buttonsWrapper.elt.appendChild(resetButton.elt);
+    buttonsWrapper.elt.className = "buttonsWrapper";
+
+    calculateButton.mousePressed(paintNearestNeighbors);
     resetButton.mousePressed(resetPoints);
   };
 
   p.draw = () => {
     p.background(220);
-    p.fill("black");
-    p.text(
-      "Click on the canvas to create five or more points around RED point",
-      10,
-      10,
-    );
-    p.fill("red");
+    p.fill("#e67e22");
     p.ellipse(redPoint.x, redPoint.y, 30, 30);
 
     if (points.length > 0) {
       for (var i = 0; i < points.length; i++) {
-        p.fill(points[i].color || "white");
+        p.fill(points[i].color || "#ffffff");
         p.ellipse(points[i].x, points[i].y, 10, 10);
       }
     }
   };
 
   p.mousePressed = () => {
-    if (p.mouseX <= 400 && p.mouseY <= 400) {
+    if (p.mouseX <= p.width && p.mouseY <= p.height) {
       points.push({ x: p.mouseX, y: p.mouseY });
     }
   };

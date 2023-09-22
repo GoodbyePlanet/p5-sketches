@@ -7,8 +7,46 @@
     <title>p5 sketch App</title>
     <script type="module" src="./main.js"></script>
   </head>
+  <style>
+    body {
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-weight: 600;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .buttonsWrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    button {
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-weight: 400;
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #dcdcdc;
+      color: #000000;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .canvas {
+      border-radius: 10px;
+    }
+  </style>
   <body>
-    <div id="one"></div>
-    <div id="two"></div>
+    <div class="wrapper">
+      <p>Click on the canvas to create more than 5 points</p>
+      <div id="nearestNeighbors"></div>
+    </div>
   </body>
 </html>
