@@ -3,7 +3,8 @@ import p5 from "p5";
 const redPoint = { x: 200, y: 200 };
 let points = [];
 let neighbors = [];
-let button;
+let calculateButton;
+let resetButton;
 
 const nearestNeighbors = new p5((p) => {
   function euclideanDistance(otherPoint) {
@@ -43,13 +44,22 @@ const nearestNeighbors = new p5((p) => {
         points[index].color = "blue"; // Add color property to points
       }
     }
+    nearestPointsCalculated = true;
+  }
+
+  function resetPoints() {
+    points = [];
   }
 
   p.setup = () => {
     p.createCanvas(400, 400).parent("two");
 
-    button = p.createButton("Calculate five nearest neighbors of RED point");
-    button.mousePressed(paintNearestNeighbors);
+    calculateButton = p.createButton(
+      "Calculate five nearest neighbors of RED point",
+    );
+    calculateButton.mousePressed(paintNearestNeighbors);
+    resetButton = p.createButton("Reset");
+    resetButton.mousePressed(resetPoints);
   };
 
   p.draw = () => {
