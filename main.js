@@ -59,6 +59,9 @@ const nearestNeighbors = new p5((p) => {
     buttonsWrapper.elt.appendChild(resetButton.elt);
     buttonsWrapper.elt.className = "buttonsWrapper";
 
+    const knnWrapper = document.getElementById("knn");
+    knnWrapper.appendChild(buttonsWrapper.elt);
+
     calculateButton.mousePressed(paintNearestNeighbors);
     resetButton.mousePressed(resetPoints);
   };
@@ -77,8 +80,123 @@ const nearestNeighbors = new p5((p) => {
   };
 
   p.mousePressed = () => {
-    if (p.mouseX <= p.width && p.mouseY <= p.height) {
+    if (
+      p.mouseX >= 0 &&
+      p.mouseX <= p.width &&
+      p.mouseY >= 0 &&
+      p.mouseY <= p.height
+    ) {
       points.push({ x: p.mouseX, y: p.mouseY });
     }
   };
+});
+
+// GRADIENT DESCENT IMPLEMENTATION
+
+// y = mx + b - predicted Y value
+// m is a slope of a line (is line moving left or right)
+// b is a y-intercept or where is the line relative to the y-axis
+
+const gPoints = [];
+const learningRate = 0.01;
+// we can consider m and b as a weights
+let b = 0;
+let m = 0;
+
+// function costFunction(m, b) {
+//   let errorRate = 0;
+//
+//   for (let i = 0; i < gPoints.length; i++) {
+//     const predictedY = m * gPoints[i].x + b;
+//     const error = predictedY - gPoints[i].y;
+//     errorRate += error * error;
+//   }
+//
+//   return (1 / (2 * gPoints.length)) * errorRate;
+// }
+
+function gradientDescent(m, b) {
+  let pointsLength = gPoints.length;
+  let partialDerivativeOfM = 0;
+  let partialDerivativeOfB = 0;
+
+  for (let i = 0; i < pointsLength; i++) {
+    let x = gPoints[i].x;
+    let y = gPoints[i].y;
+
+    const predictedY = m * x + b;
+    const error = predictedY - y;
+
+    partialDerivativeOfM += (1 / pointsLength) * error * x;
+    partialDerivativeOfB += (1 / pointsLength) * error;
+  }
+
+  m -= learningRate * partialDerivativeOfM;
+  b -= learningRate * partialDerivativeOfB;
+
+  return { m, b };
+}
+
+const gradientDescentCanvas = new p5((p) => {
+  p.setup = () => {
+    let canvas = p.createCanvas(400, 400).parent("gradientDescent");
+    canvas.elt.className = "canvas";
+  };
+
+  p.draw = () => {
+    p.background(220);
+
+    drawDots(p);
+
+    if (gPoints.length > 1) {
+      let cost = 0;
+
+      for (let i = 0; i < gPoints.length; i++) {
+        const gd = gradientDescent(m, b);
+
+        m = gd.m;
+        b = gd.b;
+      }
+
+      drawLine();
+    }
+  };
+
+  p.mousePressed = () => {
+    if (
+      p.mouseX >= 0 &&
+      p.mouseX <= p.width &&
+      p.mouseY >= 0 &&
+      p.mouseY <= p.height
+    ) {
+      let x = p.map(p.mouseX, 0, p.width, 0, 1);
+      let y = p.map(p.mouseY, 0, p.height, 1, 0);
+
+      gPoints.push(p.createVector(x, y));
+    }
+  };
+
+  function drawDots() {
+    if (gPoints.length > 0) {
+      for (var i = 0; i < gPoints.length; i++) {
+        let xPixel = p.map(gPoints[i].x, 0, 1, 0, p.width);
+        let yPixel = p.map(gPoints[i].y, 0, 1, p.height, 0);
+        p.ellipse(xPixel, yPixel, 10, 10);
+      }
+    }
+  }
+
+  function drawLine() {
+    let x1 = 0;
+    let y1 = m * x1 + b;
+    let x2 = 1;
+    let y2 = m * x2 + b;
+
+    x1 = p.map(x1, 0, 1, 0, p.width);
+    y1 = p.map(y1, 0, 1, p.height, 0);
+    x2 = p.map(x2, 0, 1, 0, p.width);
+    y2 = p.map(y2, 0, 1, p.height, 0);
+
+    p.line(x1, y1, x2, y2);
+  }
 });
