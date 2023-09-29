@@ -96,6 +96,19 @@ const nearestNeighbors = new p5((p) => {
 // y = mx + b - predicted Y value
 // m is a slope of a line (is line moving left or right)
 // b is a y-intercept or where is the line relative to the y-axis
+//
+// m = m - α * (∂J/∂m)
+// b = b - α * (∂J/∂b)
+// α is a learning reate
+//
+// Calculus
+// Partial derivative of b ∂J/∂m = (1 / m) * ∑(h(xᵢ) - yᵢ) * xᵢ
+// Partial derivarive of b ∂J/∂b = (1 / m) * ∑(h(xᵢ) - yᵢ)
+//
+// m in (1 / m) is is the number of training examples
+// h(xᵢ) is the predicted value using the current values of m and b.
+// xᵢ is the x value of the i-th data point.
+// yᵢ is the actual y value of the i-th data point.
 
 const gPoints = [];
 const learningRate = 0.01;
