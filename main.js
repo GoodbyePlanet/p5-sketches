@@ -1,6 +1,6 @@
 import p5 from "p5";
 
-const redPoint = { x: 200, y: 200 };
+const orangeEllipse = { x: 200, y: 200, h: 30, w: 30 };
 let points = [];
 let neighbors = [];
 let calculateButton;
@@ -8,8 +8,8 @@ let resetButton;
 
 const nearestNeighbors = new p5((p) => {
   function euclideanDistance(otherPoint) {
-    let diffX = redPoint.x - otherPoint?.x;
-    let diffY = redPoint.y - otherPoint?.y;
+    let diffX = orangeEllipse.x - otherPoint?.x;
+    let diffY = orangeEllipse.y - otherPoint?.y;
 
     let sum = diffX * diffX + diffY * diffY;
     return p.sqrt(sum);
@@ -56,6 +56,13 @@ const nearestNeighbors = new p5((p) => {
     );
   }
 
+  function isMouseClickOutsideOrangeEllipse() {
+    return (
+      p.dist(p.mouseX, p.mouseY, orangeEllipse.x, orangeEllipse.y) >=
+      p.max(orangeEllipse.w, orangeEllipse.h) / 2
+    );
+  }
+
   p.setup = () => {
     let canvas = p.createCanvas(400, 400).parent("nearestNeighbors");
     canvas.elt.className = "canvas";
@@ -78,7 +85,12 @@ const nearestNeighbors = new p5((p) => {
   p.draw = () => {
     p.background(220);
     p.fill("#e67e22");
-    p.ellipse(redPoint.x, redPoint.y, 30, 30);
+    p.ellipse(
+      orangeEllipse.x,
+      orangeEllipse.y,
+      orangeEllipse.h,
+      orangeEllipse.w,
+    );
 
     if (points.length > 0) {
       for (var i = 0; i < points.length; i++) {
@@ -89,7 +101,7 @@ const nearestNeighbors = new p5((p) => {
   };
 
   p.mousePressed = () => {
-    if (isInsideCanvas()) {
+    if (isInsideCanvas() && isMouseClickOutsideOrangeEllipse()) {
       points.push({ x: p.mouseX, y: p.mouseY });
     }
   };
