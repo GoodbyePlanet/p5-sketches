@@ -47,6 +47,15 @@ const nearestNeighbors = new p5((p) => {
     points = [];
   }
 
+  function isInsideCanvas() {
+    return (
+      p.mouseX >= 0 &&
+      p.mouseX <= p.width &&
+      p.mouseY >= 0 &&
+      p.mouseY <= p.height
+    );
+  }
+
   p.setup = () => {
     let canvas = p.createCanvas(400, 400).parent("nearestNeighbors");
     canvas.elt.className = "canvas";
@@ -80,12 +89,7 @@ const nearestNeighbors = new p5((p) => {
   };
 
   p.mousePressed = () => {
-    if (
-      p.mouseX >= 0 &&
-      p.mouseX <= p.width &&
-      p.mouseY >= 0 &&
-      p.mouseY <= p.height
-    ) {
+    if (isInsideCanvas()) {
       points.push({ x: p.mouseX, y: p.mouseY });
     }
   };
@@ -110,12 +114,6 @@ const nearestNeighbors = new p5((p) => {
 // xᵢ is the x value of the i-th data point.
 // yᵢ is the actual y value of the i-th data point.
 
-const gPoints = [];
-const learningRate = 0.01;
-// we can consider m and b as a weights
-let b = 0;
-let m = 0;
-
 // function costFunction(m, b) {
 //   let errorRate = 0;
 //
@@ -127,6 +125,12 @@ let m = 0;
 //
 //   return (1 / (2 * gPoints.length)) * errorRate;
 // }
+
+const gPoints = [];
+const learningRate = 0.1;
+// we can consider m and b as a weights
+let b = 0;
+let m = 0;
 
 function gradientDescent(m, b) {
   let pointsLength = gPoints.length;
@@ -151,6 +155,15 @@ function gradientDescent(m, b) {
 }
 
 const gradientDescentCanvas = new p5((p) => {
+  function isInsideCanvas() {
+    return (
+      p.mouseX >= 0 &&
+      p.mouseX <= p.width &&
+      p.mouseY >= 0 &&
+      p.mouseY <= p.height
+    );
+  }
+
   p.setup = () => {
     let canvas = p.createCanvas(400, 400).parent("gradientDescent");
     canvas.elt.className = "canvas";
@@ -162,8 +175,6 @@ const gradientDescentCanvas = new p5((p) => {
     drawDots(p);
 
     if (gPoints.length > 1) {
-      let cost = 0;
-
       for (let i = 0; i < gPoints.length; i++) {
         const gd = gradientDescent(m, b);
 
@@ -176,12 +187,7 @@ const gradientDescentCanvas = new p5((p) => {
   };
 
   p.mousePressed = () => {
-    if (
-      p.mouseX >= 0 &&
-      p.mouseX <= p.width &&
-      p.mouseY >= 0 &&
-      p.mouseY <= p.height
-    ) {
+    if (isInsideCanvas()) {
       let x = p.map(p.mouseX, 0, p.width, 0, 1);
       let y = p.map(p.mouseY, 0, p.height, 1, 0);
 
